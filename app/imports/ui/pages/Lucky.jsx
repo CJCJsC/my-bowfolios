@@ -1,6 +1,6 @@
 import React from 'react';
 import { Meteor } from 'meteor/meteor';
-import { Container, Row} from 'react-bootstrap';
+import { Container, Row } from 'react-bootstrap';
 import { useTracker } from 'meteor/react-meteor-data';
 import PropTypes from 'prop-types';
 import { _ } from 'meteor/underscore';
@@ -23,7 +23,7 @@ function getProfileData(email) {
 }
 
 /* Renders the Profile Collection as a set of Cards. */
-const ProfilesPage = () => {
+const LuckyPage = () => {
   const { ready } = useTracker(() => {
     // Ensure that minimongo is populated with all collections prior to running render().
     const sub1 = Meteor.subscribe(Profiles.userPublicationName);
@@ -38,13 +38,14 @@ const ProfilesPage = () => {
   // There is a potential race condition. We might not be ready at this point.
   // Need to ensure that getProfileData doesn't throw an error on line 18.
   const profileData = emails.map(email => getProfileData(email));
+  const profile = _.sample(profileData);
   return ready ? (
-    <Container id={PageIDs.profilesPage} style={pageStyle}>
-      <Row xs={1} md={2} lg={4} className="g-2">
-        {profileData.map((profile, index) => <ProfileCard key={index} profile={profile} />)}
-      </Row>
-    </Container>
+      <Container id={PageIDs.profilesPage} style={pageStyle}>
+        <Row xs={1} md={2} lg={4} className="g-2">
+          <ProfileCard profile={profile} />)
+        </Row>
+      </Container>
   ) : <LoadingSpinner />;
 };
 
-export default ProfilesPage;
+export default LuckyPage;
